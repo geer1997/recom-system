@@ -50,7 +50,6 @@ def getSubjectsCall(studentId):
 @app.route('/api/getCombinations/<assignsNumber>',methods=['POST'])
 def getCombinationsCall(assignsNumber):
     data = request.get_json(force=True)
-    # print('data for combinations', data, data.get('availables'))
     return jsonify(createCombinations(data.get('availables'), data.get('preselected'), assignsNumber).tolist()) 
 
 
@@ -93,12 +92,7 @@ def predictModel(studentId):
 
     array_data_test = adaptX(studentId)
 
-    # print("DATA X:", array_data_test[0][0], array_data_test[0][29], array_data_test.shape)
-
     array_target_test, array_data_test = adaptYModel5(targetTrim, array_data_test)
-
-    # print("array", array_data_test.shape, array_target_test[0].shape, file=sys.stderr)
-    # print("target result:", array_target_test, file=sys.stderr)
 
     modelPath = os.path.abspath("../datos/modelos/model-5.0.pkl")
     model = joblib.load(open(modelPath,'rb'))

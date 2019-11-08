@@ -20,36 +20,26 @@ def adapty(assigns_trim_target):
 
   all_assigns.sort()
 
-  # print('LEEEEEEEEEENGTH y', all_assigns.__len__())
-
   only_assigns = {}
   for assign_zero in all_assigns:
     only_assigns[assign_zero] = 0
     
   for assign in assigns_trim_target:
-    # print("assign", assign)
     only_assigns[assign] = 1
     
   array_target.append(np.array( tuple(only_assigns.values()) ))
-  # print('SHAAAAAAAPE', np.asarray(array_target).shape)
   return np.asarray(array_target)
 
 def getContextAndTarget(array_target, array_data):
   new_array_historial = []
   new_array_target_mat = []
   new_array_target_context = []
-  # print(array_target.shape[1])
   for materia in range(array_target.shape[1]):
-    # print('num materia', materia)
     # Comprobacion de que la materia este vacia, para sartarla
     if(np.array_equal(array_target[0][materia], np.zeros((66)))):
       continue
-
-    # print('RECIBIENDO ARRAY TARGET:', array_target)
     mat_target = [array_target[0][materia]]
     context_target = np.delete(array_target[0], materia, 0)
-    # print('MATERIA:', mat_target)
-    # print('CONTEXTO:', context_target)
 
     new_array_target_mat.append(mat_target)
     new_array_target_context.append(context_target)
@@ -62,8 +52,7 @@ def adaptYModel5(assigns_trim_target, array_data):
   array_target = []
   new_array_data = []
   max_number_trim = len(assigns_trim_target)
-  # print(max_number_trim)
-
+  
   all_assigns = ['FBTCE03','FBTMM00','FBTHU01','FBTIE02','BPTQI21','BPTMI04','FBPIN01'
   ,'BPTPI07','FBPLI02','FBTIN04','FGE0000','FBPCE04','FBPMM02','FBTIN05'
   ,'FBPIN03','FBPIN02','FBPLI01','FBPCE03','FBPMM01','FBTHU02','FBTSP03'
@@ -76,29 +65,22 @@ def adaptYModel5(assigns_trim_target, array_data):
   ,'FPTSP25','FPTSP21','FPTIS01']
 
   all_assigns.sort()
-
-  # print('LEEEEEEEEEENGTH model 5', all_assigns.__len__())
-
+  
   # Rellenar todos los espacios de materias target en 0 
 
-  
   # Se itera sobre cada posible trimestre
   for idx, trim in enumerate(assigns_trim_target):
     # Se llena la fila que va dentro de cada fila de row_assigns
     only_assigns = {}
-
-    # print("trim", trim)
-
+    
     for assign_zero in all_assigns:
       only_assigns[assign_zero] = 0
     
     for assign in trim:
-      # print("assign", assign)
       if (assign != ''):
         only_assigns[assign] = 1
     
     array_target.append(np.array( tuple(only_assigns.values()) ))
     new_array_data.append(array_data[0])
-  # print('SHAAAAAAAPE', np.asarray(array_target).shape)
   return np.asarray(array_target), np.asarray(new_array_data)
 
