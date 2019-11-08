@@ -40,13 +40,7 @@
                 <ng-template matStepLabel>Resultado
                 </ng-template>
                 <div class="result-grid py-2 full-height" *ngIf="!loadingPred">
-                    <!--<i class="material-icons md-90" [ngClass]="success ? 'md-success' : 'md-danger'">
-                        {{ success ? 'check_circle_outline' : 'error_outline'}}
-                    </i>
-                    <p>Probabilidad Obtenida: {{ predictionResult | percent: '.2'}}</p>
-                    <p> {{ success ? 'El estudiante aprobará todas las materias ingresadas' : 'El estudiante no aprobará todas las materias ingresadas'}}
-                    </p>
-                -->
+
                     <h3> Combinaciones obtenidas</h3>
                     <mat-card class="card-combination" *ngFor="let combination of predictionResult">
                             <mat-grid-list cols="2" rowHeight="130px">
@@ -66,7 +60,6 @@
                                 </mat-grid-tile>
                             </mat-grid-list>
                     </mat-card>
-
 
                 </div>
                 <div class="card-spinner" *ngIf="loadingPred">

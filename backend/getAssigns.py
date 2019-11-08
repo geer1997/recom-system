@@ -26,7 +26,6 @@ def getAvailableSubjects(studentId):
         if (assign.split('_')[0] == "FGE0000"):
             continue
         assigns_trim_target_aux = np.append(assigns_trim_target_aux, assign.split('_')[0], axis=None)
-    print("materias que vio", np.asarray(assigns_trim_target_aux).tolist())
 
     #NUEVO
     seenSubjects = np.asarray(assigns_trim_target_aux)
@@ -58,7 +57,6 @@ def getAvailableSubjects_test(studentId):
     for assign in assigns_trim_target:
         # Validacion para no incluir la materia en el array de materias vistas si el estudiante no la ha pasado (reprobado o retirado)
         if (assign.split('_')[1] == "Reprobo" or assign.split('_')[1] == "R"):
-            # print("aqui paso algo",assign.split('_')[1])
             continue
         # Validacion para no incluir como vista la materia Electiva, para que el estudiante pueda elegirla siempre como opcion
         if (assign.split('_')[0] == "FGE0000"):
@@ -183,7 +181,6 @@ def createCombinations(availablesArray, preselectedArray, assignsNumber):
         # Obtener todas las combinaciones posibles de materias, de todas las longitudes posibles
         for number in numbers:
             number = number - len(preselectedArray)
-            print('current number: ', number)
             combs = list(itertools.combinations(availablesArray, number))
             # Iterador para insertar las materias preseleccionadas
             if (preselectedArray and len(preselectedArray) > 0):

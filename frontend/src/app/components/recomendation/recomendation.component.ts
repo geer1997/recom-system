@@ -73,62 +73,41 @@ export class RecomendationComponent implements OnInit {
         break;
       case 2:
         this.loadingPred = true;
-        // this.predict();
         this.getCombinations();
         break;
     }
   }
 
   getAvailablesFiltered(filtered) {
-    // this.secondFormGroup.setValue({ targetSubjects: filtered });
     this.secondFormGroup.get('targetSubjects').setValue(filtered);
   }
 
   getPreselected(filtered) {
-    // this.availablesFiltered = filtered;
     this.secondFormGroup.get('preselectedSubjects').setValue(filtered);
-
   }
 
   /**
-   * @param availablesFiltered
-   * @param number 
    * Funcion que genera todas las posibles combinaciones de materias a partir de
    * el array de las materias disponibles escogidas por el usuario
    */
   getCombinations() {
     this.availablesFiltered = this.secondFormGroup.value.targetSubjects;
     this.preselectedFiltered = this.secondFormGroup.value.preselectedSubjects;
-    console.log('disponibles:', this.availablesFiltered);
-    console.log('obligatorias:', this.preselectedFiltered);
     this.apiService.getCombinations(this.availablesFiltered, this.preselectedFiltered, this.numberAssigns).then(res => {
-      // console.log('res', res);
       this.allCombinations = res;
-      console.log("all subjects combinations", this.allCombinations);
       this.predict();
     });
   }
 
   predict() {
-    // const targetQuarter = this.secondFormGroup.value.targetSubjects;
     this.apiService.predictPerformanceModel5(this.studentId, this.allCombinations).then(res => {
-      console.log('res', res);
       this.predictionResult = res.map(r => {
-        console.log("iterador map", r);
 
         return {
           prediction: r.prediction,
           subjects: this.getSubjectsName(r)
         }
       });
-      console.log("resultado final", this.predictionResult);
-
-      // console.log(this.predictionResult);
-      // if (this.predictionResult >= 0.5) {
-      //   this.success = true;
-      // } else {
-      //   this.success = false;
-      // }
       this.loadingPred = false;
     });
   }
@@ -136,20 +115,14 @@ export class RecomendationComponent implements OnInit {
   getSubjectsName(predictionRes: PredictionModelFive): { code: string; name: string; disabled: boolean; }[] {
     let subjectsInfo: { code: string; name: string; disabled: boolean; }[] = [];
     predictionRes.subjects.forEach(subjectCode => {
-      // console.log("subject code", subjectCode, this.allSubjects);
 
-      if (subjectCode != "") {
+      if (subjectCode !== '') {
         this.allSubjects.forEach(s => {
-          // console.log("eseee", s);
 
-          if (s.code == subjectCode) {
-            // console.log("if", s.code, subjectCode);
-
+          if (s.code === subjectCode) {
             subjectsInfo.push(s);
           }
-          // subjectsInfo.push({ code: subjectCode, name: 'NaN', disabled: true });
-        }
-        )
+        });
       }
     });
     return subjectsInfo;
@@ -163,7 +136,6 @@ export class RecomendationComponent implements OnInit {
   getAvailableSubjects(id) {
     this.apiService.getAvailableSubjects(id).then(res => {
       this.allSubjects = res;
-      console.log("all subjects", this.allSubjects);
     });
   }
 
@@ -172,10 +144,8 @@ export class RecomendationComponent implements OnInit {
   }
 
   reset() {
-    console.log('antes reset:', this.secondFormGroup.value);
     this.secondFormGroup.get('preselectedSubjects').setValue([]);
     this.secondFormGroup.get('targetSubjects').setValue([]);
-    console.log('despues de reset:', this.secondFormGroup.value, this.dataForm.value);
     this.resetList = true;
   }
 

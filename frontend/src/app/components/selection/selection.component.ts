@@ -33,7 +33,7 @@ export class SelectionComponent implements OnInit {
 
   allSubjects: { code: string; name: string; disabled: boolean; }[];
   isRecom = false;
-  
+
   constructor(
     private apiService: ApiService,
     private formBuilder: FormBuilder,
@@ -44,7 +44,6 @@ export class SelectionComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(param => {
       this.predictionOption = param.selection;
-      console.log(this.predictionOption);
       this.createForms();
     });
   }
@@ -53,6 +52,7 @@ export class SelectionComponent implements OnInit {
     this.firstFormGroup = this.formBuilder.group({
       id: ['', Validators.required]
     });
+
     this.secondFormGroup = this.formBuilder.group({
       targetSubjectsFirst: ['', Validators.required],
       targetSubjectsSecond: ['', Validators.required]
@@ -60,13 +60,11 @@ export class SelectionComponent implements OnInit {
   }
 
   nextStep(step) {
-    console.log(step);
     switch (step) {
       case 1:
         this.resetList = false;
         if (this.studentId !== this.firstFormGroup.value.id) {
           this.loading = true;
-          console.log(step, this.firstFormGroup.value);
           this.studentId = this.firstFormGroup.value.id;
         }
         this.getAvailableSubjects(this.studentId);
@@ -79,19 +77,15 @@ export class SelectionComponent implements OnInit {
   }
 
   loaded(event) {
-    console.log(event);
     this.loading = event;
   }
 
   saveSelection(event, trimNumber: number) {
-    console.log(event, trimNumber);
-    console.log(this.secondFormGroup.value.targetSubjectsFirst);
     if (trimNumber === 1) {
       this.secondFormGroup.get('targetSubjectsFirst').setValue(event);
     } else if (trimNumber === 2) {
       this.secondFormGroup.get('targetSubjectsSecond').setValue(event);
     }
-    console.log(this.secondFormGroup.value);
   }
 
   goBack() {
@@ -101,43 +95,8 @@ export class SelectionComponent implements OnInit {
   predict() {
     const targetQuarter = [this.secondFormGroup.value.targetSubjectsFirst, this.secondFormGroup.value.targetSubjectsSecond];
     switch (this.predictionOption) {
-      case 'global': {
-        // console.log('entro en global');
-        // this.apiService.predictStudentPerformance(this.studentId, targetQuarter).then(res => {
-        //   console.log('res', res);
-        //   this.predictionResult = res[0][0];
-        //   console.log(this.predictionResult);
-        //   if (this.predictionResult >= 0.5) {
-        //     this.success = true;
-        //   } else {
-        //     this.success = false;
-        //   }
-        //   this.loadingPred = false;
-        //   this.apiService.predictIndice(this.studentId, targetQuarter).then(res2 => {
-        //     console.log('Respuesta modelo indice:', res2);
-        //   });
-        // });
-        break;
-      }
-      case 'custom': {
-        // console.log('entro en custom');
-        // // this.apiService.predictStudentPerformanceByAssigns(this.studentId, targetQuarter).then(res => {
-        // this.apiService.predictPerformanceModel4_V1(this.studentId, targetQuarter).then(res => {
-        //   console.log('res', res);
-        //   this.predictionResult = res[0][0];
-        //   // console.log(this.predictionResult);
-        //   if (this.predictionResult >= 0.5) {
-        //     this.success = true;
-        //   } else {
-        //     this.success = false;
-        //   }
-        //   this.loadingPred = false;
-        // });
-        break;
-      }
       case 'comparacion': {
         this.apiService.predictPerformanceModel5(this.studentId, targetQuarter, false).then(res => {
-          console.log('res', res);
           this.predictionM5 = res;
           this.predictionResult = res.map(r => {
             return {
@@ -157,22 +116,16 @@ export class SelectionComponent implements OnInit {
   }
 
   getSubjectsName(predictionRes: PredictionModelFive): { code: string; name: string; disabled: boolean; }[] {
-    let subjectsInfo: { code: string; name: string; disabled: boolean; }[] = [];
+    const subjectsInfo: { code: string; name: string; disabled: boolean; }[] = [];
     predictionRes.subjects.forEach(subjectCode => {
-      // console.log("subject code", subjectCode, this.allSubjects);
 
-      if (subjectCode != "") {
+      if (subjectCode !== '') {
         this.allSubjects.forEach(s => {
-          // console.log("eseee", s);
 
-          if (s.code == subjectCode) {
-            // console.log("if", s.code, subjectCode);
-
+          if (s.code === subjectCode) {
             subjectsInfo.push(s);
           }
-          // subjectsInfo.push({ code: subjectCode, name: 'NaN', disabled: true });
-        }
-        )
+        });
       }
     });
     return subjectsInfo;
@@ -181,7 +134,6 @@ export class SelectionComponent implements OnInit {
   getAvailableSubjects(id) {
     this.apiService.getAvailableSubjects(id).then(res => {
       this.allSubjects = res;
-      console.log("all subjects", this.allSubjects);
     });
   }
 

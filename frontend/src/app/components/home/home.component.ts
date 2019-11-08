@@ -19,13 +19,8 @@ export class HomeComponent implements OnInit {
         this.router.navigate(['/recomendation']);
         break;
       case 2:
-        this.router.navigate(['/prediction', 'global']);
-        break;
-      case 3:
-        this.router.navigate(['/prediction', 'custom']);
-        break;
-      case 4:
         this.router.navigate(['/prediction', 'comparacion']);
+        break;
     }
   }
 
