@@ -34,10 +34,6 @@ api = Api(app)
 
 CORS(app, support_credentials=True)
 
-@app.route("/")
-def hello():
-    return jsonify({'text':'Hello World!'})
-
 # Función que regresa una lista de los códigos y nombres de las asignaturas que el estudiante no ha visto
 @app.route('/api/getSubjects/<studentId>',methods=['POST'])
 def getSubjectsCall(studentId):
@@ -60,12 +56,8 @@ def predictModel2(studentId):
     K.clear_session()
 
     targetTrim = request.get_json(force=True)
-    print("TARGET:",targetTrim)
     array_target_test = adapty(targetTrim)
     array_data_test = adaptX(studentId)
-    print("DATA X:", array_data_test, len(array_data_test))
-
-    print("array", array_data_test.shape, array_target_test.shape, file=sys.stderr)
 
     modelPath = os.path.abspath('..\\datos\ordenados\\model2.pkl')
     model = joblib.load(open(modelPath,'rb'))
@@ -84,8 +76,6 @@ def predictModel(studentId):
     K.clear_session()
 
     targetTrim =  request.get_json(force=True)
-
-    # print("TARGET:",targetTrim)
 
     # UNCOMMENT THE NEXT LINE TO TEST WITH KNOWN TRIMESTRES
     # array_data_test = adaptX_test(studentId)
@@ -111,9 +101,7 @@ def predictModel(studentId):
 
     for oi in order_index:
         final_subjects.append({'subjects': targetTrim[oi], 'prediction': str(output[oi][0])})
-    
-    print("final subjects", final_subjects)
-
+       
     #After prediction
     K.clear_session()
     return jsonify(final_subjects)
@@ -124,11 +112,3 @@ if __name__ == '__main__':
     app.run(host=HOST,
             debug=True,  # automatic reloading enabled
             port=PORT) 
-
-
-
-#Modelo 5 testeo con split
-# TEST DATA: [array([10068854]) array([10087881]) array([10077126]) array([10078660])
-#  array([10066589]) array([10079147]) array([10091723]) array([10074639])
-#  array([10091471]) array([10061223]) array([10088866]) array([10082111])
-#  array([10065078])]
